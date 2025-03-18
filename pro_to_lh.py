@@ -3,7 +3,7 @@ import sys
 import base64
 
 sys.argv=["Main"]
-import Tkinter
+import tkinter
 
 LH_POS = 108        # Position note for Pro G/B
 MAXLEN = 1048567
@@ -185,20 +185,21 @@ def merge_notes(MIDIdata_1, MIDIdata_2):
     return MIDIdata_1
 
 def pro_to_lh(form, inst):
-    pro_name = "part real_" + inst.lower()
+    pro_name = "part real_" + inst.lower().strip()
     pro_item = get_item(pro_name)
     
     std_name = "part " + inst.lower()
     std_item = get_item(std_name)
 
     if pro_item is None:
-        RPR_MB("Could not find a \"PART REAL_GUITAR\" MIDI item.", "Pro to LH", 0)
+        RPR_MB(f'Could not find the "PART REAL_{inst.upper()}" MIDI item.\nMake sure it\'s named exactly that!', "Pro to LH", 0)
         form.destroy()
         return
     if std_item is None:
-        RPR_MB("Could not find a \"PART GUITAR MIDI\" item.", "Pro to LH", 0)
+        RPR_MB(f'Could not find the "PART {inst.upper()}" MIDI item.\nMake sure it\'s named exactly that!', "Pro to LH", 0)
         form.destroy()
         return
+
 
     pro_midi = filter_pro_positions(get_midi_data(pro_item))
     std_midi = filter_std_positions(get_midi_data(std_item))
@@ -223,26 +224,26 @@ def pro_to_lh(form, inst):
     form.destroy()
 
 def main():
-    form = Tkinter.Tk()
+    form = tkinter.Tk()
     form.wm_title("Pro to LH")
     form.minsize(height=70, width=170)
 
-    frame_sel = Tkinter.Frame(form)
-    frame_sel.pack(side=Tkinter.LEFT, fill="both", padx=10)
+    frame_sel = tkinter.Frame(form)
+    frame_sel.pack(side=tkinter.LEFT, fill="both", padx=10)
 
     opts = ("Guitar", "Bass")
-    tkvar = Tkinter.StringVar(form)
+    tkvar = tkinter.StringVar(form)
     tkvar.set("Guitar")
 
-    inst_sel = Tkinter.OptionMenu(frame_sel, tkvar, *opts)
-    inst_sel.pack(side=Tkinter.LEFT)
+    inst_sel = tkinter.OptionMenu(frame_sel, tkvar, *opts)
+    inst_sel.pack(side=tkinter.LEFT)
 
-    frame_btn = Tkinter.Frame(form)
-    frame_btn.pack(side=Tkinter.RIGHT, fill="both", padx=10)
+    frame_btn = tkinter.Frame(form)
+    frame_btn.pack(side=tkinter.RIGHT, fill="both", padx=10)
 
-    button = Tkinter.Button(frame_btn, text="Apply", 
+    button = tkinter.Button(frame_btn, text="Apply", 
             command=lambda: pro_to_lh(form, tkvar.get()))
-    button.pack(side=Tkinter.RIGHT)
+    button.pack(side=tkinter.RIGHT)
 
     form.mainloop()
 
